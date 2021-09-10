@@ -1,0 +1,57 @@
+/* DT173G moment 2, Alice Fagerberg */
+* {
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+body {
+    background-color:rgb(247, 247, 247);
+    font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
+    transition:all 0.3s;
+}
+
+header{
+    width:100%;
+    height:auto;
+    background-color:rgb(242, 246, 250);
+    border-bottom:1.5px solid rgb(167, 169, 172); 
+    display:flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+ul{
+    list-style: none;
+    height:50px;
+    
+}
+li {
+    float:left;
+    width:33.3%;
+}
+
+@media screen and (max-width: 540px){
+    li {
+        width:100%;
+    }
+
+}
+
+
+@media screen and (min-width: 770px) {
+    header {
+        justify-content: space-between;
+        flex-direction: row;
+    }
+
+    li {
+        width:auto;
+    }
+
+    li:hover button{
+
+        padding-top:50px;
+        border-radius:0 0 5px 5px;
+    }
+}
