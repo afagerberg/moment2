@@ -6,16 +6,16 @@ const {src, dest, parallel, series, watch} = require('gulp');
 //Variabler med paket
 const concat = require('gulp-concat');
 const terser = require('gulp-terser');
-const cssnano = require('gulp-cssnano');
 const imagemin = require('gulp-imagemin');
 const browserSync = require('browser-sync').create();
 const sourcemaps = require('gulp-sourcemaps');
 const webp = require('gulp-webp');
+const sass = require('gulp-sass')(require('sass'));
 
 //sökvägar
 const files = {
     htmlPath: "src/**/*.html",
-    cssPath: "src/css/*.css",
+    sassPath: "src/sass/*.scss",
     jsPath: "src/js/*.js",
     imagePath: "src/images/*"
 }
@@ -26,16 +26,15 @@ function copyHTML() {
     .pipe(dest('pub'));
 }
 
-//css-task kopierar till pub
-function cssTask() {
-    return src(files.cssPath)
+
+//sass task
+function sassTask() {
+    return src(files.sassPath)
     .pipe(sourcemaps.init())
-    .pipe(concat('main.css'))
-    .pipe(cssnano())
-    .pipe(sourcemaps.write('../maps'))
-    .pipe(dest('pub/css'))
-    .pipe(browserSync.stream());//känn av uppdatering i css till reload
-    
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(dest('pub/css')
+    );
 }
 
 //js-task kopierar till pub
@@ -72,11 +71,11 @@ function watchTask() {
         server: "./pub"
     });
 
-    watch([files.htmlPath, files.cssPath, files.jsPath, files.imagePath], parallel(copyHTML, cssTask, jsTask, imageTask, webpTask)).on('change', browserSync.reload);
+    watch([files.htmlPath, files.sassPath, files.jsPath, files.imagePath], parallel(copyHTML, sassTask, jsTask, imageTask, webpTask)).on('change', browserSync.reload);
 }
 
 //exporterar taskfunktioner med metoder
 exports.default = series(
-    parallel(copyHTML, cssTask, jsTask, imageTask, webpTask),
+    parallel(copyHTML, sassTask, jsTask, imageTask, webpTask),
     watchTask
 );
